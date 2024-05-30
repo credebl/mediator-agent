@@ -1,0 +1,98 @@
+{
+    "family": "DEV_MEDIATOR_TASKDEFINITION",
+    "containerDefinitions": [
+        {
+            "name": "mediator",
+            "image": "%REPOSITORY_URI%:MEDIATOR_v_%BUILD_NUMBER%",
+            "cpu": 256,
+            "memory": 512,
+            "portMappings": [
+                {
+                    "name": "mediator-3000-tcp",
+                    "containerPort": 3000,
+                    "hostPort": 3000,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [
+                {
+                    "name": "POSTGRES_USER",
+                    "value": "postgres"
+                },
+                {
+                    "name": "USE_PUSH_NOTIFICATIONS",
+                    "value": "true"
+                },
+                {
+                    "name": "POSTGRES_HOST",
+                    "value": "mediator-database.cr4oyuycyq8o.me-central-1.rds.amazonaws.com:5432"
+                },
+                {
+                    "name": "AGENT_NAME",
+                    "value": "NASHID_Mediator"
+                },
+                {
+                    "name": "POSTGRES_PASSWORD",
+                    "value": "ypIYuZ5YuFy"
+                },
+                {
+                    "name": "WALLET_KEY",
+                    "value": "H0*X1cXZp@#P94%56CREDEBL_Mediator"
+                },
+                {
+                    "name": "AGENT_ENDPOINTS",
+                    "value": "https://mediator.nashidplatform.com,wss://mediator.nashidplatform.com"
+                },
+                {
+                    "name": "POSTGRES_ADMIN_USER",
+                    "value": "postgres"
+                },
+                {
+                    "name": "INVITATION_URL",
+                    "value": "https://mediator.nashidplatform.com/invite"
+                },
+                {
+                    "name": "AGENT_PORT",
+                    "value": "3000"
+                },
+                {
+                    "name": "NOTIFICATION_WEBHOOK_URL",
+                    "value": "https://service.nashidplatform.com/notification"
+                },
+                {
+                    "name": "POSTGRES_ADMIN_PASSWORD",
+                    "value": "ypIYuZ5YuFy"
+                },
+                {
+                    "name": "WALLET_NAME",
+                    "value": "NASHID_Mediator"
+                }
+            ],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": [],
+          "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-create-group": "true",
+                    "awslogs-group": "/ecs/DEV_MEDIATOR_TASKDEFINITION",
+                    "awslogs-region": "me-central-1",
+                    "awslogs-stream-prefix": "ecs"
+                 }
+            }
+        }
+        
+    ],
+   
+    "executionRoleArn": "arn:aws:iam::${ACCOUNT_ID}:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "placementConstraints": [],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "256",
+    "memory": "512"
+}
