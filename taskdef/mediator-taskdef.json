@@ -1,0 +1,50 @@
+{
+    "family": "DEV_MEDIATOR_TASKDEFINITION",
+    "containerDefinitions": [
+        {
+            "name": "mediator",
+            "image": "%REPOSITORY_URI%:MEDIATOR_v_%BUILD_NUMBER%",
+            "cpu": 256,
+            "memory": 512,
+            "portMappings": [
+                {
+                    "name": "mediator-3000-tcp",
+                    "containerPort": 3000,
+                    "hostPort": 3000,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [],
+            "environmentFiles": [
+                {
+                    "value": "${S3_ARN}",
+                    "type": "s3"
+                }
+            ],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": [],
+          "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-create-group": "true",
+                    "awslogs-group": "/ecs/DEV_MEDIATOR_TASKDEFINITION",
+                    "awslogs-region": "me-central-1",
+                    "awslogs-stream-prefix": "ecs"
+                 }
+            }
+        }
+        
+    ],
+   
+    "executionRoleArn": "arn:aws:iam::${ACCOUNT_ID}:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "placementConstraints": [],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "256",
+    "memory": "512"
+}
