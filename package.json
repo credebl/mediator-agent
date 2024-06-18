@@ -38,7 +38,7 @@
     "prettier": "^2.8.4",
     "tslog": "^3.3.3",
     "tsyringe": "^4.8.0",
-    "ws": "^8.13.0"
+    "ws": "^8.17.1"
   },
   "devDependencies": {
     "@ngrok/ngrok": "^1.2.0",
