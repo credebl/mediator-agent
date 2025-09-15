@@ -1,3 +1,4 @@
+import { otelSDK } from './tracer';
 import {
   OutOfBandDidCommService,
   OutOfBandInvitation,
@@ -10,6 +11,14 @@ import { createAgent } from './agent'
 import { INVITATION_URL } from './constants'
 
 void createAgent().then(async (agent) => {
+  if (otelSDK) {
+      await otelSDK.start();
+      // eslint-disable-next-line no-console
+      console.log('OpenTelemetry SDK started successfully');
+    } else {
+      // eslint-disable-next-line no-console
+      console.log('OpenTelemetry SDK disabled for this environment');
+    }
   agent.config.logger.info('Agent started')
 
   // Try to find existing out of band record

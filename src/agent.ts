@@ -106,6 +106,31 @@ export async function createAgent() {
     res.status(200).send('Ok')
   })
 
+  httpInboundTransport.app.get('/connections', async (_req, res) => {
+    try {
+      const connections = await agent.connections.getAll()
+      agent.config.logger.debug('Connections:::::::::', connections.map((conn) => conn.toJSON()))
+      res.json(connections.map((conn) => conn.toJSON()))
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to fetch connections' })
+    }
+  })
+
+  httpInboundTransport.app.post('/connections/:connectionId/rotate-did', async (req, res) => {
+    const { connectionId } = req.params
+    try {
+      const connection = await agent.connections.findById(connectionId)
+      if (!connection) {
+        return res.status(404).json({ error: 'Connection not found' })
+      }
+      const rotateDId = await agent.connections.rotate({ connectionId })
+
+      res.json({ message: 'DID rotated successfully', rotateDId })
+    } catch (error) {
+      res.status(500).json({ error: 'Failed to rotate DID', details: error instanceof Error ? error.message : error })
+    }
+  })
+
   // eslint-disable-next-line @typescript-eslint/no-misused-promises
   httpInboundTransport.app.get('/invite', async (req, res) => {
     if (!req.query._oobid || typeof req.query._oobid !== 'string') {
