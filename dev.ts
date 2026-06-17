@@ -1,5 +1,5 @@
-import { config } from 'dotenv'
 import { connect } from '@ngrok/ngrok'
+import { config } from 'dotenv'
 
 config()
 
@@ -12,6 +12,7 @@ const port = 3000
 // TODO: have to add auth token now to use ngrok check this later
 void connect({
   port,
+  authtoken: '2TkNMfvaGeeU7o4xNy8aBGPWQOg_kFxWtNs8DsZowhFYfETY',
 }).then((app) => {
   // eslint-disable-next-line no-console
   console.log('Got ngrok url:', app.url())

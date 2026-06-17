@@ -1,10 +1,9 @@
-import type { FcmDeviceInfo } from '../models'
-
-import { AgentMessage, IsValidMessageType, parseMessageType } from '@credo-ts/core'
+import { DidCommMessage, IsValidMessageType, parseMessageType } from '@credo-ts/didcomm'
 import { Expose } from 'class-transformer'
 import { IsString, ValidateIf } from 'class-validator'
+import type { DidCommFcmDeviceInfo } from '../models'
 
-interface PushNotificationsFcmSetDeviceInfoOptions extends FcmDeviceInfo {
+interface DidCommPushNotificationsFcmSetDeviceInfoOptions extends DidCommFcmDeviceInfo {
   id?: string
 }
 
@@ -13,34 +12,29 @@ interface PushNotificationsFcmSetDeviceInfoOptions extends FcmDeviceInfo {
  *
  * @see https://github.com/hyperledger/aries-rfcs/tree/main/features/0734-push-notifications-fcm#set-device-info
  */
-export class PushNotificationsFcmSetDeviceInfoMessage extends AgentMessage {
-  public constructor(options: PushNotificationsFcmSetDeviceInfoOptions) {
+export class DidCommPushNotificationsFcmSetDeviceInfoMessage extends DidCommMessage {
+  public constructor(options: DidCommPushNotificationsFcmSetDeviceInfoOptions) {
     super()
 
     if (options) {
       this.id = options.id ?? this.generateId()
       this.deviceToken = options.deviceToken
       this.devicePlatform = options.devicePlatform
-      this.clientCode = options.clientCode
     }
   }
 
   @Expose({ name: 'device_token' })
   @IsString()
-  @ValidateIf((object, value) => value !== null)
+  @ValidateIf((_, value) => value !== null)
   public deviceToken!: string | null
 
   @Expose({ name: 'device_platform' })
   @IsString()
-  @ValidateIf((object, value) => value !== null)
+  @ValidateIf((_, value) => value !== null)
   public devicePlatform!: string | null
 
-  @Expose({ name: 'client_code' })
-  @IsString()
-  @ValidateIf((object, value) => value !== null)
-  public clientCode!: string | null
-
-  @IsValidMessageType(PushNotificationsFcmSetDeviceInfoMessage.type)
-  public readonly type = PushNotificationsFcmSetDeviceInfoMessage.type.messageTypeUri
   public static readonly type = parseMessageType('https://didcomm.org/push-notifications-fcm/1.0/set-device-info')
+
+  @IsValidMessageType(DidCommPushNotificationsFcmSetDeviceInfoMessage.type)
+  public readonly type = DidCommPushNotificationsFcmSetDeviceInfoMessage.type.messageTypeUri
 }

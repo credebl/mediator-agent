@@ -1,1 +1,1 @@
-export * from './PushNotificationsFcmService'
+export * from './DidCommPushNotificationsFcmService'

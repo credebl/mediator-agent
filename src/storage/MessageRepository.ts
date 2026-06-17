@@ -1,9 +1,9 @@
 import {
   AgentContext,
   EventEmitter,
+  InjectionSymbols,
   inject,
   injectable,
-  InjectionSymbols,
   Repository,
   StorageService,
 } from '@credo-ts/core'

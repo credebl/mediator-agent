@@ -1,0 +1,3 @@
+onlyBuiltDependencies:
+  - '@openwallet-foundation/askar-nodejs'
+  - koffi

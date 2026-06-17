@@ -1,4 +1,5 @@
-export { PushNotificationsFcmApi } from './PushNotificationsFcmApi'
-export { PushNotificationsFcmModule } from './PushNotificationsFcmModule'
-export * from './models'
+export { DidCommPushNotificationsFcmApi } from './DidCommPushNotificationsFcmApi'
+export { DidCommPushNotificationsFcmModule } from './DidCommPushNotificationsFcmModule'
 export * from './messages'
+export * from './models'
+export * from './repository'

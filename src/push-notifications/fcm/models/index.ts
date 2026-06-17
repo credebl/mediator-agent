@@ -1,2 +1,2 @@
-export * from './FcmDeviceInfo'
-export * from './PushNotificationsFcmRole'
+export * from './DidCommFcmDeviceInfo'
+export * from './DidCommPushNotificationsFcmRole'

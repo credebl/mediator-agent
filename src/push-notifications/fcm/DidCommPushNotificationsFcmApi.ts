@@ -1,0 +1,131 @@
+import { AgentContext, inject, injectable } from '@credo-ts/core'
+import {
+  DidCommConnectionService,
+  DidCommMessageHandlerRegistry,
+  DidCommMessageSender,
+  DidCommOutboundMessageContext,
+} from '@credo-ts/didcomm'
+import {
+  DidCommPushNotificationsFcmDeviceInfoHandler,
+  DidCommPushNotificationsFcmGetDeviceInfoHandler,
+  DidCommPushNotificationsFcmProblemReportHandler,
+  DidCommPushNotificationsFcmSetDeviceInfoHandler,
+} from './handlers'
+import type { DidCommFcmDeviceInfo } from './models'
+import { DidCommPushNotificationsFcmRecord } from './repository/DidCommPushNotificationsFcmRecord'
+import { DidCommPushNotificationsFcmService } from './services/DidCommPushNotificationsFcmService'
+
+@injectable()
+export class DidCommPushNotificationsFcmApi {
+  private messageSender: DidCommMessageSender
+  private pushNotificationsService: DidCommPushNotificationsFcmService
+  private connectionService: DidCommConnectionService
+  private agentContext: AgentContext
+
+  public constructor(
+    @inject(DidCommMessageSender) messageSender: DidCommMessageSender,
+    @inject(DidCommPushNotificationsFcmService) pushNotificationsService: DidCommPushNotificationsFcmService,
+    @inject(DidCommConnectionService) connectionService: DidCommConnectionService,
+    @inject(AgentContext) agentContext: AgentContext
+  ) {
+    this.messageSender = messageSender
+    this.pushNotificationsService = pushNotificationsService
+    this.connectionService = connectionService
+    this.agentContext = agentContext
+
+    this.agentContext
+      .resolve(DidCommMessageHandlerRegistry)
+      .registerMessageHandlers([
+        new DidCommPushNotificationsFcmSetDeviceInfoHandler(this.pushNotificationsService),
+        new DidCommPushNotificationsFcmGetDeviceInfoHandler(),
+        new DidCommPushNotificationsFcmDeviceInfoHandler(),
+        new DidCommPushNotificationsFcmProblemReportHandler(),
+      ])
+  }
+
+  /**
+   * Sends a set request with the fcm device info (token) to another agent via a `connectionId`
+   *
+   * @param connectionId The connection ID string
+   * @param deviceInfo The FCM device info
+   * @returns Promise<void>
+   */
+  public async setDeviceInfo(options: { connectionId: string; deviceInfo: DidCommFcmDeviceInfo }) {
+    const { connectionId, deviceInfo } = options
+    const connection = await this.connectionService.getById(this.agentContext, connectionId)
+    connection.assertReady()
+
+    const message = this.pushNotificationsService.createSetDeviceInfo(deviceInfo)
+
+    const outbound = new DidCommOutboundMessageContext(message, {
+      agentContext: this.agentContext,
+      connection,
+    })
+    await this.messageSender.sendMessage(outbound)
+  }
+
+  /**
+   * Sends the requested fcm device info (token) to another agent via a `connectionId`
+   * Response for `push-notifications-fcm/get-device-info`
+   *
+   * @param connectionId The connection ID string
+   * @param threadId get-device-info message ID
+   * @param deviceInfo The FCM device info
+   * @returns Promise<void>
+   */
+  public async deviceInfo(options: { connectionId: string; threadId: string; deviceInfo: DidCommFcmDeviceInfo }) {
+    const { connectionId, threadId, deviceInfo } = options
+    const connection = await this.connectionService.getById(this.agentContext, connectionId)
+    connection.assertReady()
+
+    const message = this.pushNotificationsService.createDeviceInfo({ threadId, deviceInfo })
+
+    const outbound = new DidCommOutboundMessageContext(message, {
+      agentContext: this.agentContext,
+      connection,
+    })
+    await this.messageSender.sendMessage(outbound)
+  }
+
+  /**
+   * Gets the fcm device info (token) from another agent via the `connectionId`
+   *
+   * @param connectionId The connection ID string
+   * @returns Promise<void>
+   */
+  public async getDeviceInfo(options: { connectionId: string }) {
+    const { connectionId } = options
+    const connection = await this.connectionService.getById(this.agentContext, connectionId)
+    connection.assertReady()
+
+    const message = this.pushNotificationsService.createGetDeviceInfo()
+
+    const outbound = new DidCommOutboundMessageContext(message, {
+      agentContext: this.agentContext,
+      connection,
+    })
+    await this.messageSender.sendMessage(outbound)
+  }
+
+  /**
+   * Get push notification record by `connectionId`
+   *
+   * @param connectionId The connection ID string
+   * @returns Promise<PushNotificationsFcmRecord>
+   */
+  public async getPushNotificationRecordByConnectionId(
+    connectionId: string
+  ): Promise<DidCommPushNotificationsFcmRecord> {
+    return this.pushNotificationsService.getPushNotificationRecordByConnectionId(this.agentContext, connectionId)
+  }
+
+  /**
+   * Find push notification record by `connectionId`
+   *
+   * @param connectionId The connection ID string
+   * @returns Promise<PushNotificationsFcmRecord | null>
+   */
+  public async findPushNotificationRecordByConnectionId(connectionId: string) {
+    return this.pushNotificationsService.findPushNotificationRecordByConnectionId(this.agentContext, connectionId)
+  }
+}

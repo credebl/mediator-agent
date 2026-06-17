@@ -1,6 +1,6 @@
 import type { TagsBase } from '@credo-ts/core'
 
-import { utils, BaseRecord } from '@credo-ts/core'
+import { BaseRecord, utils } from '@credo-ts/core'
 
 export type DefaultPushNotificationsFcmTags = {
   connectionId: string
@@ -8,28 +8,27 @@ export type DefaultPushNotificationsFcmTags = {
 
 export type CustomPushNotificationsFcmTags = TagsBase
 
-export interface PushNotificationsFcmStorageProps {
+export interface DidCommPushNotificationsFcmStorageProps {
   id?: string
   deviceToken: string | null
   devicePlatform: string | null
-  clientCode: string | null
   connectionId: string
   tags?: CustomPushNotificationsFcmTags
+  firebaseProjectId?: string
 }
 
-export class PushNotificationsFcmRecord extends BaseRecord<
+export class DidCommPushNotificationsFcmRecord extends BaseRecord<
   DefaultPushNotificationsFcmTags,
   CustomPushNotificationsFcmTags
 > {
   public deviceToken!: string | null
   public devicePlatform!: string | null
   public connectionId!: string
-  public clientCode!: string | null
-
+  public firebaseProjectId?: string
   public static readonly type = 'PushNotificationsFcmRecord'
-  public readonly type = PushNotificationsFcmRecord.type
+  public readonly type = DidCommPushNotificationsFcmRecord.type
 
-  public constructor(props: PushNotificationsFcmStorageProps) {
+  public constructor(props: DidCommPushNotificationsFcmStorageProps) {
     super()
 
     if (props) {
@@ -37,8 +36,8 @@ export class PushNotificationsFcmRecord extends BaseRecord<
       this.devicePlatform = props.devicePlatform
       this.deviceToken = props.deviceToken
       this.connectionId = props.connectionId
+      this.firebaseProjectId = props.firebaseProjectId
       this._tags = props.tags ?? {}
-      this.clientCode = props.clientCode
     }
   }
 
