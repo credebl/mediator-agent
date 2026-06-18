@@ -20,6 +20,7 @@ export class DidCommPushNotificationsFcmSetDeviceInfoMessage extends DidCommMess
       this.id = options.id ?? this.generateId()
       this.deviceToken = options.deviceToken
       this.devicePlatform = options.devicePlatform
+      this.clientCode = options.clientCode
     }
   }
 
@@ -32,6 +33,11 @@ export class DidCommPushNotificationsFcmSetDeviceInfoMessage extends DidCommMess
   @IsString()
   @ValidateIf((_, value) => value !== null)
   public devicePlatform!: string | null
+
+  @Expose({ name: 'client_code' })
+  @IsString()
+  @ValidateIf((object, value) => value !== null)
+  public clientCode!: string | null
 
   public static readonly type = parseMessageType('https://didcomm.org/push-notifications-fcm/1.0/set-device-info')
 

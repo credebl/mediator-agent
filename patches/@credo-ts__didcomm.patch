@@ -1,0 +1,49 @@
+diff --git a/build/DidCommMessageSender.mjs b/build/DidCommMessageSender.mjs
+index aedda59aeffe1e9af1bdafe14862f93fd22cb881..7fabacbdc4cc209214e4332176c2b5d6691a7735 100644
+--- a/build/DidCommMessageSender.mjs
++++ b/build/DidCommMessageSender.mjs
+@@ -38,7 +38,7 @@ let DidCommMessageSender = class DidCommMessageSender {
+ 		agentContext.config.logger.debug("Sending message");
+ 		await session.send(agentContext, encryptedMessage);
+ 	}
+-	async sendPackage(agentContext, { connection, encryptedMessage, recipientKey, options }) {
++	async sendPackage(agentContext, { connection, encryptedMessage, recipientKey, messageType, options }) {
+ 		const errors = [];
+ 		const session = this.transportService.findSessionByConnectionId(connection.id);
+ 		if (session?.inboundMessage?.hasReturnRouting()) try {
+@@ -75,7 +75,8 @@ let DidCommMessageSender = class DidCommMessageSender {
+ 			await this.didCommModuleConfig.queueTransportRepository.addMessage(agentContext, {
+ 				connectionId: connection.id,
+ 				recipientDids: [verkeyToDidKey(recipientKey)],
+-				payload: encryptedMessage
++				payload: encryptedMessage,
++        messageType,
+ 			});
+ 			return;
+ 		}
+diff --git a/build/modules/routing/services/DidCommMediatorService.mjs b/build/modules/routing/services/DidCommMediatorService.mjs
+index d8fb7750f3152356e037a4e263ec16f59386eff7..6e09caf47f80f91531d8a88fb84b24f58ed28e82 100644
+--- a/build/modules/routing/services/DidCommMediatorService.mjs
++++ b/build/modules/routing/services/DidCommMediatorService.mjs
+@@ -59,7 +59,8 @@ let DidCommMediatorService = class DidCommMediatorService {
+ 				await messagePickupApi.queueMessage({
+ 					connectionId: mediationRecord.connectionId,
+ 					recipientDids: [verkeyToDidKey(message.to)],
+-					message: message.message
++					message: message.message,
++          messageType: message.messageType,
+ 				});
+ 				break;
+ 			case DidCommMessageForwardingStrategy.QueueAndLiveModeDelivery: {
+diff --git a/build/transport/queue/QueueTransportRepositoryOptions.d.mts b/build/transport/queue/QueueTransportRepositoryOptions.d.mts
+index 50f80979f029f346f3e91a970f24417508940cbb..c72b628ea3c0de59f3dd6e3f3ef9c3077fa03604 100644
+--- a/build/transport/queue/QueueTransportRepositoryOptions.d.mts
++++ b/build/transport/queue/QueueTransportRepositoryOptions.d.mts
+@@ -16,6 +16,7 @@ interface AddMessageOptions {
+   recipientDids: string[];
+   payload: DidCommEncryptedMessage;
+   receivedAt?: Date;
++  messageType?: string;
+ }
+ interface RemoveMessagesOptions {
+   connectionId: string;

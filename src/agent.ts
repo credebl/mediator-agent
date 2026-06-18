@@ -1,4 +1,6 @@
+// biome-ignore assist/source/organizeImports: We need to keep askar-nodejs import above credo-askar
 import type { Socket } from 'node:net'
+import { askarNodeJS } from '@openwallet-foundation/askar-nodejs'
 import {
   AskarModule,
   AskarModuleConfigStoreOptions,
@@ -16,7 +18,6 @@ import {
   DidCommWsOutboundTransport,
 } from '@credo-ts/didcomm'
 import { agentDependencies, DidCommHttpInboundTransport, DidCommWsInboundTransport } from '@credo-ts/node'
-import { askarNodeJS } from '@openwallet-foundation/askar-nodejs'
 import express, { type Express } from 'express'
 import { Server, WebSocketServer } from 'ws'
 
@@ -24,6 +25,7 @@ import { AGENT_ENDPOINTS, AGENT_PORT, LOG_LEVEL, POSTGRES_HOST, WALLET_KEY, WALL
 import { askarPostgresConfig } from './database'
 import { Logger } from './logger'
 import { DidCommPushNotificationsFcmModule } from './push-notifications/fcm'
+import { MessageRepository } from './storage/MessageRepository'
 import { StorageServiceMessageQueue } from './storage/StorageMessageQueue'
 
 function createModules(
@@ -52,6 +54,11 @@ function createModules(
       endpoints: AGENT_ENDPOINTS,
       useDidSovPrefixWhereAllowed: true,
       didCommMimeType: DidCommMimeType.V0,
+
+      // Protocols not needed for mediator
+      basicMessages: false,
+      credentials: false,
+      proofs: false,
     }),
     askar: new AskarModule({
       askar: askarNodeJS,
@@ -129,6 +136,9 @@ export async function createAgent() {
   })
 
   try {
+    // Register message repository
+    agent.dependencyManager.registerSingleton(MessageRepository)
+
     await agent.modules.askar.provisionStore()
     agent.config.logger.info('Provisioned store')
   } catch (error) {

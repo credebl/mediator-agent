@@ -50,6 +50,7 @@ export class DidCommPushNotificationsFcmService {
       threadId,
       deviceToken: deviceInfo.deviceToken,
       devicePlatform: deviceInfo.devicePlatform,
+      clientCode: deviceInfo.clientCode,
     })
   }
 
@@ -80,8 +81,6 @@ export class DidCommPushNotificationsFcmService {
 
       // Update the record with new device token
       pushNotificationsFcmRecord.deviceToken = message.deviceToken
-      // Reset project in case the firebase project might have changed
-      pushNotificationsFcmRecord.firebaseProjectId = undefined
 
       this.logger.debug(`Device token changed for connection ${connection.id}. Updating record`)
       await this.pushNotificationsFcmRepository.update(agentContext, pushNotificationsFcmRecord)
@@ -92,6 +91,7 @@ export class DidCommPushNotificationsFcmService {
         connectionId: connection.id,
         deviceToken: message.deviceToken,
         devicePlatform: message.devicePlatform,
+        clientCode: message.clientCode,
       })
 
       await this.pushNotificationsFcmRepository.save(agentContext, pushNotificationsFcmRecord)

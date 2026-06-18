@@ -12,9 +12,9 @@ export interface DidCommPushNotificationsFcmStorageProps {
   id?: string
   deviceToken: string | null
   devicePlatform: string | null
+  clientCode: string | null
   connectionId: string
   tags?: CustomPushNotificationsFcmTags
-  firebaseProjectId?: string
 }
 
 export class DidCommPushNotificationsFcmRecord extends BaseRecord<
@@ -24,7 +24,7 @@ export class DidCommPushNotificationsFcmRecord extends BaseRecord<
   public deviceToken!: string | null
   public devicePlatform!: string | null
   public connectionId!: string
-  public firebaseProjectId?: string
+  public clientCode!: string | null
   public static readonly type = 'PushNotificationsFcmRecord'
   public readonly type = DidCommPushNotificationsFcmRecord.type
 
@@ -36,7 +36,6 @@ export class DidCommPushNotificationsFcmRecord extends BaseRecord<
       this.devicePlatform = props.devicePlatform
       this.deviceToken = props.deviceToken
       this.connectionId = props.connectionId
-      this.firebaseProjectId = props.firebaseProjectId
       this._tags = props.tags ?? {}
     }
   }
