@@ -1,2 +1,2 @@
-export * from './PushNotificationsFcmProblemReportReason'
-export * from './PushNotificationsFcmProblemReportError'
+export * from './DidCommPushNotificationsFcmProblemReportError'
+export * from './DidCommPushNotificationsFcmProblemReportReason'

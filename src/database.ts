@@ -1,8 +1,8 @@
-import type { AskarWalletPostgresStorageConfig } from '@credo-ts/askar/build/wallet'
+import type { AskarPostgresStorageConfig } from '@credo-ts/askar'
 
-import { POSTGRES_USER, POSTGRES_PASSWORD, POSTGRES_HOST } from './constants'
+import { POSTGRES_HOST, POSTGRES_PASSWORD, POSTGRES_USER } from './constants'
 
-export const askarPostgresConfig: AskarWalletPostgresStorageConfig = {
+export const askarPostgresConfig: AskarPostgresStorageConfig = {
   // AskarWalletPostgresStorageConfig defines interface for the Postgres plugin configuration.
   type: 'postgres',
   config: {

@@ -1,0 +1,9 @@
+ignoredBuiltDependencies:
+  - esbuild
+
+onlyBuiltDependencies:
+  - '@openwallet-foundation/askar-nodejs'
+  - koffi
+
+patchedDependencies:
+  '@credo-ts/didcomm': patches/@credo-ts__didcomm.patch

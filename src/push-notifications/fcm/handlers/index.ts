@@ -1,3 +1,4 @@
-export { PushNotificationsFcmDeviceInfoHandler } from './PushNotificationsFcmDeviceInfoHandler'
-export { PushNotificationsFcmSetDeviceInfoHandler } from './PushNotificationsFcmSetDeviceInfoHandler'
-export { PushNotificationsFcmProblemReportHandler } from './PushNotificationsFcmProblemReportHandler'
+export { DidCommPushNotificationsFcmDeviceInfoHandler } from './DidCommPushNotificationsFcmDeviceInfoHandler'
+export { DidCommPushNotificationsFcmGetDeviceInfoHandler } from './DidCommPushNotificationsFcmGetDeviceInfoHandler'
+export { DidCommPushNotificationsFcmProblemReportHandler } from './DidCommPushNotificationsFcmProblemReportHandler'
+export { DidCommPushNotificationsFcmSetDeviceInfoHandler } from './DidCommPushNotificationsFcmSetDeviceInfoHandler'

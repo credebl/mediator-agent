@@ -1,5 +1,6 @@
 import { LogLevel } from '@credo-ts/core'
 import * as dotenv from 'dotenv'
+
 dotenv.config()
 
 export const AGENT_PORT = process.env.AGENT_PORT ? Number(process.env.AGENT_PORT) : 3000

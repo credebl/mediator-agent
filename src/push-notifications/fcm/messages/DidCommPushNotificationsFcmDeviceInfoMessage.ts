@@ -1,10 +1,9 @@
-import type { FcmDeviceInfo } from '../models'
-
-import { AgentMessage, IsValidMessageType, parseMessageType } from '@credo-ts/core'
+import { DidCommMessage, IsValidMessageType, parseMessageType } from '@credo-ts/didcomm'
 import { Expose } from 'class-transformer'
 import { IsString, ValidateIf } from 'class-validator'
+import type { DidCommFcmDeviceInfo } from '../models'
 
-interface PushNotificationsFcmDeviceInfoOptions extends FcmDeviceInfo {
+interface DidCommPushNotificationsFcmDeviceInfoOptions extends DidCommFcmDeviceInfo {
   id?: string
   threadId: string
 }
@@ -15,8 +14,8 @@ interface PushNotificationsFcmDeviceInfoOptions extends FcmDeviceInfo {
  *
  * @see https://github.com/hyperledger/aries-rfcs/tree/main/features/0734-push-notifications-fcm#device-info
  */
-export class PushNotificationsFcmDeviceInfoMessage extends AgentMessage {
-  public constructor(options: PushNotificationsFcmDeviceInfoOptions) {
+export class DidCommPushNotificationsFcmDeviceInfoMessage extends DidCommMessage {
+  public constructor(options: DidCommPushNotificationsFcmDeviceInfoOptions) {
     super()
 
     if (options) {
@@ -29,15 +28,16 @@ export class PushNotificationsFcmDeviceInfoMessage extends AgentMessage {
 
   @Expose({ name: 'device_token' })
   @IsString()
-  @ValidateIf((object, value) => value !== null)
+  @ValidateIf((_, value) => value !== null)
   public deviceToken!: string | null
 
   @Expose({ name: 'device_platform' })
   @IsString()
-  @ValidateIf((object, value) => value !== null)
+  @ValidateIf((_, value) => value !== null)
   public devicePlatform!: string | null
 
-  @IsValidMessageType(PushNotificationsFcmDeviceInfoMessage.type)
-  public readonly type = PushNotificationsFcmDeviceInfoMessage.type.messageTypeUri
   public static readonly type = parseMessageType('https://didcomm.org/push-notifications-fcm/1.0/device-info')
+
+  @IsValidMessageType(DidCommPushNotificationsFcmDeviceInfoMessage.type)
+  public readonly type = DidCommPushNotificationsFcmDeviceInfoMessage.type.messageTypeUri
 }

@@ -1,2 +1,2 @@
-export * from './PushNotificationsFcmRecord'
-export * from './PushNotificationsFcmRepository'
+export * from './DidCommPushNotificationsFcmRecord'
+export * from './DidCommPushNotificationsFcmRepository'
