@@ -53,5 +53,10 @@
   },
   "engines": {
     "node": ">=18"
+  },
+  "resolutions": {
+    "tar": "^7.5.19",
+    "form-data": "^4.0.4",
+    "@babel/traverse": "^7.23.2"
   }
 }
